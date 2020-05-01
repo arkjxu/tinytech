@@ -1,0 +1,10 @@
+{
+  "name": "tinytech",
+  "version": "1.0.0",
+  "description": "for microservices",
+  "main": "index.js",
+  "repository": "https://github.com/arkjxu/tinytech.git",
+  "author": "Ark Xu",
+  "license": "MIT",
+  "private": false
+}
