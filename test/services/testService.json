@@ -1,0 +1,10 @@
+{
+  "name": "testService",
+  "endpoint": "http://127.0.0.1",
+  "version": "1.0.0",
+  "port": "4002",
+  "procs": [
+    "testProc",
+    "hi"
+  ]
+}

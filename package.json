@@ -2,9 +2,21 @@
   "name": "tinytech",
   "version": "1.0.0",
   "description": "for microservices",
-  "main": "index.js",
+  "main": "dist/main.js",
+  "scripts": {
+    "dev": "npm run build && npm run start",
+    "test": "jest",
+    "build": "rm -rf dist && tsc",
+    "start": "node dist/main.js"
+  },
   "repository": "https://github.com/arkjxu/tinytech.git",
   "author": "Ark Xu",
   "license": "MIT",
-  "private": false
+  "private": false,
+  "dependencies": {},
+  "devDependencies": {
+    "eslint": "^6.8.0",
+    "jest": "^25.5.3",
+    "typescript": "^3.8.3"
+  }
 }
