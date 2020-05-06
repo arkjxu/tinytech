@@ -13,7 +13,9 @@
   "author": "Ark Xu",
   "license": "MIT",
   "private": false,
-  "dependencies": {},
+  "dependencies": {
+    "tinytech": "https://github.com/arkjxu/tinytech.git"
+  },
   "devDependencies": {
     "eslint": "^6.8.0",
     "jest": "^25.5.3",
