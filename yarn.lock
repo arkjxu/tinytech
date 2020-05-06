@@ -3547,10 +3547,6 @@ through@^2.3.6:
   resolved "https://registry.yarnpkg.com/through/-/through-2.3.8.tgz#0dd4c9ffaabc357960b1b724115d7e0e86a2e1f5"
   integrity sha1-DdTJ/6q8NXlgsbckEV1+Doai4fU=
 
-"tinytech@https://github.com/arkjxu/tinytech.git":
-  version "1.0.0"
-  resolved "https://github.com/arkjxu/tinytech.git#633e430d9ee11d69034b1c2de2fc792cb757ca9d"
-
 tmp@^0.0.33:
   version "0.0.33"
   resolved "https://registry.yarnpkg.com/tmp/-/tmp-0.0.33.tgz#6d34335889768d21b2bcda0aa277ced3b1bfadf9"

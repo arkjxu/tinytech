@@ -1,4 +1,4 @@
-const {TinyTechClient, TinyTechServer} = require("../dist/lib/tinytech");
+const {TinyTechClient, TinyTechServer} = require("../dist/main");
 const TestService = require("./services/testService.json");
 const testPort = 4196;
 let testService = undefined;
