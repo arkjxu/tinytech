@@ -10,6 +10,12 @@ class TinyTechServer {
         this._server = http2_1.default.createServer(_config, this.onRequest.bind(this));
         this._middlewares = [];
         this._procedures = new Map();
+        this._graceful = undefined;
+        process.on("exit", this.graceful.bind(this));
+        process.on("SIGINT", this.graceful.bind(this));
+        process.on("SIGUSR1", this.graceful.bind(this));
+        process.on("SIGUSR2", this.graceful.bind(this));
+        process.on("uncaughtException", this.graceful.bind(this));
     }
     onRequest(req, _res) {
         const headers = {
@@ -80,6 +86,10 @@ class TinyTechServer {
     }
     close() {
         this._server.close();
+    }
+    graceful() {
+        if (this._graceful)
+            this._graceful();
     }
 }
 exports.TinyTechServer = TinyTechServer;

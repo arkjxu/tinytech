@@ -43,6 +43,7 @@ export declare class TinyTechServer {
     private _server;
     private _middlewares;
     private _procedures;
+    private _graceful;
     constructor(_config?: http2.ServerOptions);
     private onRequest;
     attachProcedure(name: string, proc: ITinyTechProcedure): void;
@@ -51,6 +52,7 @@ export declare class TinyTechServer {
     private removeFromList;
     listen(port?: number): void;
     close(): void;
+    graceful(): void;
 }
 export declare class TinyTechClient {
     readonly jsonInterface: string | ITinyTechServiceInfo;
