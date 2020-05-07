@@ -22,6 +22,7 @@ export interface ITinyTechHeader {
     "content-length"?: string | undefined;
     date?: string | undefined;
     "referer"?: string | undefined;
+    "accept"?: string | undefined;
 }
 export interface ITinyTechResponse {
     body: string;

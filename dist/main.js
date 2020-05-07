@@ -33,7 +33,8 @@ class TinyTechServer {
             authorization: req.headers.authorization,
             "content-length": req.headers["content-length"],
             referer: req.headers["referer"],
-            "content-encoding": req.headers["content-encoding"]
+            "content-encoding": req.headers["content-encoding"],
+            "accept": req.headers["accept"]
         };
         const reqCtx = {
             headers,
@@ -51,9 +52,10 @@ class TinyTechServer {
                 }
             }
         };
-        req.on("data", (chunk) => {
-            if (ctx.response)
-                ctx.response.body += chunk.toString("utf8");
+        req.on("data", async (chunk) => {
+            if (ctx.request) {
+                ctx.request.body += chunk.toString("utf8");
+            }
         });
         req.on("end", async () => {
             if (this._procedures.has(ctx.request.headers.path)) {
@@ -68,7 +70,7 @@ class TinyTechServer {
                 ctx.response.body = "Procedure not found!";
             }
             req.setEncoding("utf8");
-            if (ctx.request.headers["content-encoding"] === "gzip") {
+            if (ctx.request.headers["accept"] === "gzip") {
                 req.stream.end(await compress(ctx.response.body));
             }
             else {
@@ -170,7 +172,9 @@ class TinyTechClient {
             req.on("data", (chunk) => {
                 ctx.response.body += chunk.toString("utf8");
             });
-            req.on("end", () => resolve(ctx));
+            req.on("end", () => {
+                resolve(ctx);
+            });
             req.setEncoding("utf8");
             if (req.writable && data) {
                 req.write(Buffer.alloc(data.length, data));
