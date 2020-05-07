@@ -29,13 +29,13 @@ export interface ITinyTechHeader {
 }
 
 export interface ITinyTechResponse {
-  body: string;
+  body: any;
   headers: ITinyTechHeader;
 }
 
 export interface ITinyTechRequest {
   headers: ITinyTechHeader;
-  body: string;
+  body: any;
   stream: http2.Http2Stream | undefined;
 }
 
