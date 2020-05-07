@@ -7,7 +7,8 @@
     "dev": "npm run build && npm run start",
     "test": "npm run build && jest",
     "build": "rm -rf dist && tsc",
-    "start": "node dist/main.js"
+    "start": "node dist/main.js",
+    "release": "npm run test && git add . && git commit -m \"release\" && git push origin master"
   },
   "repository": "https://github.com/arkjxu/tinytech.git",
   "author": "Ark Xu",

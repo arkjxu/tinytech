@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const http2_1 = __importDefault(require("http2"));
+const zlib_1 = __importDefault(require("zlib"));
 class TinyTechServer {
     constructor(_config = {}) {
         this._config = _config;
@@ -66,8 +67,19 @@ class TinyTechServer {
             else {
                 ctx.response.body = "Procedure not found!";
             }
+            const bodyBuffer = Buffer.alloc(ctx.response.body.length, ctx.response.body);
             req.setEncoding("utf8");
-            req.stream.end(Buffer.alloc(ctx.response.body.length, ctx.response.body));
+            if (ctx.request.headers["content-encoding"] === "gzip") {
+                zlib_1.default.gzip(bodyBuffer, (err, result) => {
+                    if (err)
+                        req.stream.end(Buffer.alloc(err.message.length, err.message));
+                    else
+                        req.stream.end(result);
+                });
+            }
+            else {
+                req.stream.end(bodyBuffer);
+            }
         });
     }
     attachProcedure(name, proc) {
