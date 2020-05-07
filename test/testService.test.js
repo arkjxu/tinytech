@@ -47,8 +47,7 @@ test("Test POST with gzip accept", async () => {
   let testClient = new TinyTechClient(TestService);
   const compressedData = await compress("Hi");
   const result = await testClient.procedure("testPost", "Hi", {
-    "accept": "gzip",
-    ":method": "POST"
+    "accept": "gzip"
   });
   testClient.close();
   expect(result.response.body).toBe(compressedData);

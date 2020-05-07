@@ -164,7 +164,10 @@ class TinyTechClient {
                     body: ""
                 }
             };
-            const req = this._client.request(Object.assign({}, { ":path": ["/", name].join("") }, headers));
+            const req = this._client.request(Object.assign({}, {
+                ":path": ["/", name].join(""),
+                ":method": headers && headers.method ? headers.method : data ? "POST" : "GET"
+            }, headers));
             req.on("error", (err) => reject(err));
             req.on("response", (headers) => {
                 ctx.response.headers = headers;
