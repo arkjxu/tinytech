@@ -20,6 +20,8 @@ class TinyTechServer {
     onExitHandler() {
         if (this._graceful)
             this._graceful();
+        if (this._server.listening)
+            this._server.close();
     }
     onRequest(req, _res) {
         const headers = {
@@ -88,8 +90,10 @@ class TinyTechServer {
     listen(port = 8400) {
         this._server.listen(port);
     }
-    close() {
+    close(runExitHandler = false) {
         this._server.close();
+        if (runExitHandler)
+            this.onExitHandler();
     }
     graceful(cb) {
         this._graceful = cb;

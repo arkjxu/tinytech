@@ -52,7 +52,7 @@ export declare class TinyTechServer {
     unuse(toBeRemoved: ITinyTechMiddleWare): void;
     private removeFromList;
     listen(port?: number): void;
-    close(): void;
+    close(runExitHandler?: boolean): void;
     graceful(cb: (() => void) | undefined): void;
 }
 export declare class TinyTechClient {

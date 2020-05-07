@@ -64,6 +64,7 @@ export class TinyTechServer {
   
   private onExitHandler() {
     if (this._graceful) this._graceful();
+    if (this._server.listening) this._server.close();
   }
 
   private onRequest(req: http2.Http2ServerRequest, _res: http2.Http2ServerResponse) {
@@ -135,8 +136,9 @@ export class TinyTechServer {
     this._server.listen(port);
   }
 
-  public close(): void {
+  public close(runExitHandler: boolean = false): void {
     this._server.close();
+    if (runExitHandler) this.onExitHandler();
   }
 
   public graceful(cb: (()=>void) | undefined): void {
