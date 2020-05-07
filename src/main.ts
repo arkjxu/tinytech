@@ -49,11 +49,19 @@ export class TinyTechServer {
   private _server: http2.Http2Server;
   private _middlewares: ITinyTechMiddleWare[];
   private _procedures: Map<string, ITinyTechProcedure>;
+  private _graceful: (()=>void) | undefined;
   constructor(protected _config: http2.ServerOptions = {}) { 
     this._server = http2.createServer(_config, this.onRequest.bind(this));
     this._middlewares = [];
     this._procedures = new Map<string, ITinyTechProcedure>();
+    this._graceful = undefined;
+    process.on("exit", this.graceful.bind(this));
+    process.on("SIGINT", this.graceful.bind(this));
+    process.on("SIGUSR1", this.graceful.bind(this));
+    process.on("SIGUSR2", this.graceful.bind(this));
+    process.on("uncaughtException", this.graceful.bind(this));
   }
+
   private onRequest(req: http2.Http2ServerRequest, _res: http2.Http2ServerResponse) {
     const headers: ITinyTechHeader = {
       method: req.headers[":method"],
@@ -125,6 +133,10 @@ export class TinyTechServer {
 
   public close(): void {
     this._server.close();
+  }
+
+  public graceful(): void {
+    if (this._graceful) this._graceful();
   }
 }
 
