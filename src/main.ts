@@ -1,4 +1,5 @@
 import http2 from "http2";
+import zlib from "zlib";
 
 export interface ITinyTechServiceInfo {
   name: string;
@@ -107,8 +108,16 @@ export class TinyTechServer {
       } else {
         ctx.response.body = "Procedure not found!";
       }
+      const bodyBuffer = Buffer.alloc(ctx.response.body.length, ctx.response.body);
       req.setEncoding("utf8");
-      req.stream.end(Buffer.alloc(ctx.response.body.length, ctx.response.body));
+      if (ctx.request.headers["content-encoding"] === "gzip") {
+        zlib.gzip(bodyBuffer, (err: Error | null, result: Buffer) => {
+          if (err) req.stream.end(Buffer.alloc(err.message.length, err.message));
+          else req.stream.end(result);
+        });
+      } else {
+        req.stream.end(bodyBuffer);
+      }
     });
   }
 
