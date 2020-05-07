@@ -108,15 +108,11 @@ export class TinyTechServer {
       } else {
         ctx.response.body = "Procedure not found!";
       }
-      const bodyBuffer = Buffer.alloc(ctx.response.body.length, ctx.response.body);
       req.setEncoding("utf8");
       if (ctx.request.headers["content-encoding"] === "gzip") {
-        zlib.gzip(bodyBuffer, (err: Error | null, result: Buffer) => {
-          if (err) req.stream.end(Buffer.alloc(err.message.length, err.message));
-          else req.stream.end(result);
-        });
+        req.stream.end(await compress(ctx.response.body));
       } else {
-        req.stream.end(bodyBuffer);
+        req.stream.end(Buffer.alloc(ctx.response.body.length, ctx.response.body));
       }
     });
   }
@@ -236,6 +232,25 @@ export class TinyTechClient {
       this._client.destroy();
     }
   }
+}
+
+export function compress(data: string): Promise<Buffer> {
+  return new Promise((resolve, reject) => {
+    const binData = Buffer.alloc(data.length, data, "utf8");
+    zlib.gzip(binData, (err: Error | null, result: Buffer) => {
+      if (err) reject(err);
+      resolve(result);
+    })
+  });
+}
+
+export function decompress(buffer: Buffer): Promise<string> {
+  return new Promise((resolve, reject) => {
+    zlib.unzip(buffer, (err: Error | null, data: Buffer) => {
+      if (err) reject(err);
+      resolve(data.toString());
+    })
+  });
 }
 
 export default {TinyTechServer};

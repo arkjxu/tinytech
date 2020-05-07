@@ -67,18 +67,12 @@ class TinyTechServer {
             else {
                 ctx.response.body = "Procedure not found!";
             }
-            const bodyBuffer = Buffer.alloc(ctx.response.body.length, ctx.response.body);
             req.setEncoding("utf8");
             if (ctx.request.headers["content-encoding"] === "gzip") {
-                zlib_1.default.gzip(bodyBuffer, (err, result) => {
-                    if (err)
-                        req.stream.end(Buffer.alloc(err.message.length, err.message));
-                    else
-                        req.stream.end(result);
-                });
+                req.stream.end(await compress(ctx.response.body));
             }
             else {
-                req.stream.end(bodyBuffer);
+                req.stream.end(Buffer.alloc(ctx.response.body.length, ctx.response.body));
             }
         });
     }
@@ -195,5 +189,26 @@ class TinyTechClient {
     }
 }
 exports.TinyTechClient = TinyTechClient;
+function compress(data) {
+    return new Promise((resolve, reject) => {
+        const binData = Buffer.alloc(data.length, data, "utf8");
+        zlib_1.default.gzip(binData, (err, result) => {
+            if (err)
+                reject(err);
+            resolve(result);
+        });
+    });
+}
+exports.compress = compress;
+function decompress(buffer) {
+    return new Promise((resolve, reject) => {
+        zlib_1.default.unzip(buffer, (err, data) => {
+            if (err)
+                reject(err);
+            resolve(data.toString());
+        });
+    });
+}
+exports.decompress = decompress;
 exports.default = { TinyTechServer };
 //# sourceMappingURL=main.js.map

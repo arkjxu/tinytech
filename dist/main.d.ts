@@ -64,6 +64,8 @@ export declare class TinyTechClient {
     availableProcedures(): readonly string[];
     close(): void;
 }
+export declare function compress(data: string): Promise<Buffer>;
+export declare function decompress(buffer: Buffer): Promise<string>;
 declare const _default: {
     TinyTechServer: typeof TinyTechServer;
 };
