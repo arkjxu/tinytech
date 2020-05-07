@@ -234,23 +234,23 @@ export class TinyTechClient {
   }
 }
 
-export function compress(data: string): Promise<Buffer> {
+export function compress(data: string): Promise<string> {
   return new Promise((resolve, reject) => {
-    const binData = Buffer.alloc(data.length, data, "utf8");
-    zlib.gzip(binData, (err: Error | null, result: Buffer) => {
+    zlib.gzip(data, (err: Error | null, result: Buffer) => {
       if (err) reject(err);
-      resolve(result);
+      resolve(result.toString("base64"));
     })
   });
 }
 
-export function decompress(buffer: Buffer): Promise<string> {
+export function decompress(data: string): Promise<string> {
   return new Promise((resolve, reject) => {
-    zlib.unzip(buffer, (err: Error | null, data: Buffer) => {
+    const decodedData = Buffer.from(data, "base64");
+    zlib.unzip(decodedData, (err: Error | null, data: Buffer) => {
       if (err) reject(err);
-      resolve(data.toString());
+      resolve(data.toString("utf8"));
     })
   });
 }
 
-export default {TinyTechServer};
+export default { TinyTechServer };

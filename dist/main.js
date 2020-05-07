@@ -191,21 +191,21 @@ class TinyTechClient {
 exports.TinyTechClient = TinyTechClient;
 function compress(data) {
     return new Promise((resolve, reject) => {
-        const binData = Buffer.alloc(data.length, data, "utf8");
-        zlib_1.default.gzip(binData, (err, result) => {
+        zlib_1.default.gzip(data, (err, result) => {
             if (err)
                 reject(err);
-            resolve(result);
+            resolve(result.toString("base64"));
         });
     });
 }
 exports.compress = compress;
-function decompress(buffer) {
+function decompress(data) {
     return new Promise((resolve, reject) => {
-        zlib_1.default.unzip(buffer, (err, data) => {
+        const decodedData = Buffer.from(data, "base64");
+        zlib_1.default.unzip(decodedData, (err, data) => {
             if (err)
                 reject(err);
-            resolve(data.toString());
+            resolve(data.toString("utf8"));
         });
     });
 }
