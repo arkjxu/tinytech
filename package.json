@@ -5,7 +5,7 @@
   "main": "dist/main.js",
   "scripts": {
     "dev": "npm run build && npm run start",
-    "test": "jest",
+    "test": "npm run build && jest",
     "build": "rm -rf dist && tsc",
     "start": "node dist/main.js"
   },

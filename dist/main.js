@@ -11,11 +11,15 @@ class TinyTechServer {
         this._middlewares = [];
         this._procedures = new Map();
         this._graceful = undefined;
-        process.on("exit", this.graceful.bind(this));
-        process.on("SIGINT", this.graceful.bind(this));
-        process.on("SIGUSR1", this.graceful.bind(this));
-        process.on("SIGUSR2", this.graceful.bind(this));
-        process.on("uncaughtException", this.graceful.bind(this));
+        process.on("exit", this.onExitHandler.bind(this));
+        process.on("SIGINT", this.onExitHandler.bind(this));
+        process.on("SIGUSR1", this.onExitHandler.bind(this));
+        process.on("SIGUSR2", this.onExitHandler.bind(this));
+        process.on("uncaughtException", this.onExitHandler.bind(this));
+    }
+    onExitHandler() {
+        if (this._graceful)
+            this._graceful();
     }
     onRequest(req, _res) {
         const headers = {
@@ -87,9 +91,8 @@ class TinyTechServer {
     close() {
         this._server.close();
     }
-    graceful() {
-        if (this._graceful)
-            this._graceful();
+    graceful(cb) {
+        this._graceful = cb;
     }
 }
 exports.TinyTechServer = TinyTechServer;

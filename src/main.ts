@@ -55,11 +55,15 @@ export class TinyTechServer {
     this._middlewares = [];
     this._procedures = new Map<string, ITinyTechProcedure>();
     this._graceful = undefined;
-    process.on("exit", this.graceful.bind(this));
-    process.on("SIGINT", this.graceful.bind(this));
-    process.on("SIGUSR1", this.graceful.bind(this));
-    process.on("SIGUSR2", this.graceful.bind(this));
-    process.on("uncaughtException", this.graceful.bind(this));
+    process.on("exit", this.onExitHandler.bind(this));
+    process.on("SIGINT", this.onExitHandler.bind(this));
+    process.on("SIGUSR1", this.onExitHandler.bind(this));
+    process.on("SIGUSR2", this.onExitHandler.bind(this));
+    process.on("uncaughtException", this.onExitHandler.bind(this));
+  }
+  
+  private onExitHandler() {
+    if (this._graceful) this._graceful();
   }
 
   private onRequest(req: http2.Http2ServerRequest, _res: http2.Http2ServerResponse) {
@@ -135,8 +139,8 @@ export class TinyTechServer {
     this._server.close();
   }
 
-  public graceful(): void {
-    if (this._graceful) this._graceful();
+  public graceful(cb: (()=>void) | undefined): void {
+    this._graceful = cb;
   }
 }
 
