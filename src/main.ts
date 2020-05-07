@@ -84,13 +84,13 @@ export class TinyTechServer {
     req.on("data", (chunk)=>{
       if (ctx.response) ctx.response.body += chunk.toString("utf8");
     })
-    req.on("end", () => {
+    req.on("end", async () => {
       if (this._procedures.has(ctx.request.headers.path)) {
         for (let i = this._middlewares.length - 1, j = 0; i >= 0; --i, ++j) {
           this._middlewares[j](ctx);
         }
         const proc: ITinyTechProcedure  | undefined = this._procedures.get(ctx.request.headers.path);
-        if (proc) proc(ctx);
+        if (proc) await proc(ctx);
       } else {
         ctx.response.body = "Procedure not found!";
       }
@@ -101,12 +101,6 @@ export class TinyTechServer {
 
   public attachProcedure(name:string, proc: ITinyTechProcedure): void {
     this._procedures.set(['/', name].join(''), proc);
-  }
-
-  public procedure(name: string, ...args: any[]): any {
-    const proc = this._procedures.get(['/', name].join(''));
-    if (proc) return proc(args);
-    return undefined;
   }
 
   public use(cb: ITinyTechMiddleWare) {
