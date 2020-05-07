@@ -46,7 +46,6 @@ export declare class TinyTechServer {
     constructor(_config?: http2.ServerOptions);
     private onRequest;
     attachProcedure(name: string, proc: ITinyTechProcedure): void;
-    procedure(name: string, ...args: any[]): any;
     use(cb: ITinyTechMiddleWare): void;
     unuse(toBeRemoved: ITinyTechMiddleWare): void;
     private removeFromList;

@@ -42,14 +42,14 @@ class TinyTechServer {
             if (ctx.response)
                 ctx.response.body += chunk.toString("utf8");
         });
-        req.on("end", () => {
+        req.on("end", async () => {
             if (this._procedures.has(ctx.request.headers.path)) {
                 for (let i = this._middlewares.length - 1, j = 0; i >= 0; --i, ++j) {
                     this._middlewares[j](ctx);
                 }
                 const proc = this._procedures.get(ctx.request.headers.path);
                 if (proc)
-                    proc(ctx);
+                    await proc(ctx);
             }
             else {
                 ctx.response.body = "Procedure not found!";
@@ -60,12 +60,6 @@ class TinyTechServer {
     }
     attachProcedure(name, proc) {
         this._procedures.set(['/', name].join(''), proc);
-    }
-    procedure(name, ...args) {
-        const proc = this._procedures.get(['/', name].join(''));
-        if (proc)
-            return proc(args);
-        return undefined;
     }
     use(cb) {
         this._middlewares.push(cb);
