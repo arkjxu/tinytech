@@ -192,7 +192,10 @@ export class TinyTechClient {
     }
     this._client = http2.connect([this._serviceInfo.endpoint, this._serviceInfo.port].join(':'));
   }
-  async procedure(name: string, data?: string, headers?: http2.OutgoingHttpHeaders): Promise<ITinyTechContext> {
+  public  getServiceInfo(): ITinyTechServiceInfo {
+    return this._serviceInfo;
+  }
+  public async procedure(name: string, data?: string, headers?: http2.OutgoingHttpHeaders): Promise<ITinyTechContext> {
     return new Promise((resolve, reject) => {
       const ctx: ITinyTechContext = {
         request: {
@@ -232,10 +235,10 @@ export class TinyTechClient {
       req.end();
     });
   }
-  availableProcedures(): readonly string[] {
+  public availableProcedures(): readonly string[] {
     return this._serviceInfo.procs.map(v=>v);
   }
-  close() {
+  public close() {
     if (!this._client.closed) {
       this._client.close();
       this._client.destroy();
@@ -262,4 +265,7 @@ export function decompress(data: string): Promise<string> {
   });
 }
 
-export default { TinyTechServer };
+export default { 
+  TinyTechServer, 
+  TinyTechClient
+};
