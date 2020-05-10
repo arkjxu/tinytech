@@ -113,6 +113,16 @@ export class TinyTechServer {
         ctx.response.body = "Procedure not found!";
       }
       req.setEncoding("utf8");
+      req.stream.respond({
+        ":path": ctx.response.headers.path,
+        ":method": ctx.response.headers.method,
+        date: ctx.response.headers.date,
+        authorization: ctx.response.headers.authorization,
+        "content-length": ctx.response.headers["content-length"],
+        referer: ctx.response.headers.referer,
+        "content-encoding": ctx.response.headers["content-encoding"],
+        "accept": ctx.response.headers["accept"]
+      });
       if (ctx.request.headers["accept"] === "gzip") {
         req.stream.end(await compress(ctx.response.body));
       } else {
