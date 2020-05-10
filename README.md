@@ -3,6 +3,11 @@ Tiny tech is the abbreviation for tiny technology.
 This library only has 200 lines of code including types for 
 typescript.  It's basically a wrapper for the NodeJS HTTP/2 module.
 
+## Current Status
+***
+![alt text][build]
+![alt text][license]
+![alt text][docs]
 
 ## Usage
 ***
@@ -231,3 +236,10 @@ A: Maybe, I'll fix bugs, but not sure about features.
 
 ## Contributor
 * Kevin Xu
+
+
+[license]: https://camo.githubusercontent.com/2b5c48821f22738887c98a07f95852b610fb555b/68747470733a2f2f696d672e736869656c64732e696f2f61706d2f6c2f61746f6d69632d64657369676e2d75692e7376673f "MIT license"
+
+[docs]: https://camo.githubusercontent.com/614c7585c82b25086d62bfe7745aa9f765291151/68747470733a2f2f72656164746865646f63732e6f72672f70726f6a656374732f7974326d70332f62616467652f3f76657273696f6e3d6c6174657374 "docs"
+
+[build]: https://camo.githubusercontent.com/7795340899e8ed519dc205d2c73b2360e17faaba/68747470733a2f2f7472617669732d63692e6f72672f626f656e6e656d616e6e2f6261646765732e7376673f6272616e63683d6d6173746572 "build"
