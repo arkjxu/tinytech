@@ -201,6 +201,10 @@ export class TinyTechClient {
       this._serviceInfo.version = envPort ? envPort : "Unknown";
     }
     this._client = http2.connect([this._serviceInfo.endpoint, this._serviceInfo.port].join(':'));
+    this._client.on("error", (e) => {
+      console.log("BAD CONNECTION!");
+      throw e;
+    });
   }
   public  getServiceInfo(): ITinyTechServiceInfo {
     return this._serviceInfo;

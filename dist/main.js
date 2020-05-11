@@ -70,6 +70,16 @@ class TinyTechServer {
                 ctx.response.body = "Procedure not found!";
             }
             req.setEncoding("utf8");
+            req.stream.respond({
+                ":path": ctx.response.headers.path,
+                ":method": ctx.response.headers.method,
+                date: ctx.response.headers.date,
+                authorization: ctx.response.headers.authorization,
+                "content-length": ctx.response.headers["content-length"],
+                referer: ctx.response.headers.referer,
+                "content-encoding": ctx.response.headers["content-encoding"],
+                "accept": ctx.response.headers["accept"]
+            });
             if (ctx.request.headers["accept"] === "gzip") {
                 req.stream.end(await compress(ctx.response.body));
             }
@@ -144,6 +154,13 @@ class TinyTechClient {
             this._serviceInfo.version = envPort ? envPort : "Unknown";
         }
         this._client = http2_1.default.connect([this._serviceInfo.endpoint, this._serviceInfo.port].join(':'));
+        this._client.on("error", (e) => {
+            console.log("BAD CONNECTION!");
+            throw e;
+        });
+    }
+    getServiceInfo() {
+        return this._serviceInfo;
     }
     async procedure(name, data, headers) {
         return new Promise((resolve, reject) => {
@@ -217,5 +234,8 @@ function decompress(data) {
     });
 }
 exports.decompress = decompress;
-exports.default = { TinyTechServer };
+exports.default = {
+    TinyTechServer,
+    TinyTechClient
+};
 //# sourceMappingURL=main.js.map

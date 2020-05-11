@@ -61,6 +61,7 @@ export declare class TinyTechClient {
     private _client;
     private _serviceInfo;
     constructor(jsonInterface: string | ITinyTechServiceInfo);
+    getServiceInfo(): ITinyTechServiceInfo;
     procedure(name: string, data?: string, headers?: http2.OutgoingHttpHeaders): Promise<ITinyTechContext>;
     availableProcedures(): readonly string[];
     close(): void;
@@ -69,6 +70,7 @@ export declare function compress(data: string): Promise<string>;
 export declare function decompress(data: string): Promise<string>;
 declare const _default: {
     TinyTechServer: typeof TinyTechServer;
+    TinyTechClient: typeof TinyTechClient;
 };
 export default _default;
 //# sourceMappingURL=main.d.ts.map

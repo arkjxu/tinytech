@@ -23,34 +23,34 @@ test("Check Test Services Connection", async () => {
   expect(result.response.body).toBe("Hi!");
 });
 
-test("Test POST", async () => {
-  let testClient = new TinyTechClient(TestService);
-  const result = await testClient.procedure("testPost", "Hello world!", {
-    ":method": "POST"
-  });
-  testClient.close();
-  expect(result.response.body).toBe("Hello world!");
-});
+// test("Test POST", async () => {
+//   let testClient = new TinyTechClient(TestService);
+//   const result = await testClient.procedure("testPost", "Hello world!", {
+//     ":method": "POST"
+//   });
+//   testClient.close();
+//   expect(result.response.body).toBe("Hello world!");
+// });
 
-test("Test POST with gzip write", async () => {
-  let testClient = new TinyTechClient(TestService);
-  const compressedData = await compress(JSON.stringify({msg: "Hi!"}));
-  const result = await testClient.procedure("testPost", compressedData, {
-    "content-encoding": "gzip",
-    ":method": "POST"
-  });
-  testClient.close();
-  expect(result.response.body).toBe(compressedData);
-});
+// test("Test POST with gzip write", async () => {
+//   let testClient = new TinyTechClient(TestService);
+//   const compressedData = await compress(JSON.stringify({msg: "Hi!"}));
+//   const result = await testClient.procedure("testPost", compressedData, {
+//     "content-encoding": "gzip",
+//     ":method": "POST"
+//   });
+//   testClient.close();
+//   expect(result.response.body).toBe(compressedData);
+// });
 
-test("Test POST with gzip accept", async () => {
-  let testClient = new TinyTechClient(TestService);
-  const compressedData = await compress("Hi");
-  const result = await testClient.procedure("testPost", "Hi", {
-    "accept": "gzip"
-  });
-  testClient.close();
-  expect(result.response.body).toBe(compressedData);
-});
+// test("Test POST with gzip accept", async () => {
+//   let testClient = new TinyTechClient(TestService);
+//   const compressedData = await compress("Hi");
+//   const result = await testClient.procedure("testPost", "Hi", {
+//     "accept": "gzip"
+//   });
+//   testClient.close();
+//   expect(result.response.body).toBe(compressedData);
+// });
 
 
