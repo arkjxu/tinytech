@@ -71,7 +71,6 @@ class TinyTechServer {
             }
             req.setEncoding("utf8");
             req.stream.respond({
-                ":path": ctx.response.headers.path,
                 ":method": ctx.response.headers.method,
                 date: ctx.response.headers.date,
                 authorization: ctx.response.headers.authorization,
@@ -154,10 +153,8 @@ class TinyTechClient {
             this._serviceInfo.version = envPort ? envPort : "Unknown";
         }
         this._client = http2_1.default.connect([this._serviceInfo.endpoint, this._serviceInfo.port].join(':'));
-        this._client.on("error", (err) => {
+        this._client.on("error", () => {
             this._client.close();
-            console.log("BAD CONNECTION!");
-            throw err;
         });
     }
     isClosed() {
