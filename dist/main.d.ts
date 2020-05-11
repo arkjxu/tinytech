@@ -61,6 +61,7 @@ export declare class TinyTechClient {
     private _client;
     private _serviceInfo;
     constructor(jsonInterface: string | ITinyTechServiceInfo);
+    isClosed(): boolean;
     getServiceInfo(): ITinyTechServiceInfo;
     procedure(name: string, data?: string, headers?: http2.OutgoingHttpHeaders): Promise<ITinyTechContext>;
     availableProcedures(): readonly string[];

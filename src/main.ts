@@ -207,6 +207,9 @@ export class TinyTechClient {
       throw e;
     });
   }
+  public isClosed(): boolean {
+    return this._client.closed;
+  }
   public  getServiceInfo(): ITinyTechServiceInfo {
     return this._serviceInfo;
   }

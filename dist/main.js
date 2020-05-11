@@ -160,6 +160,9 @@ class TinyTechClient {
             throw e;
         });
     }
+    isClosed() {
+        return this._client.closed;
+    }
     getServiceInfo() {
         return this._serviceInfo;
     }
