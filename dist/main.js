@@ -155,6 +155,7 @@ class TinyTechClient {
         }
         this._client = http2_1.default.connect([this._serviceInfo.endpoint, this._serviceInfo.port].join(':'));
         this._client.on("error", (e) => {
+            this._client.close();
             console.log("BAD CONNECTION!");
             throw e;
         });
