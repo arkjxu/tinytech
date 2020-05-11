@@ -201,10 +201,9 @@ export class TinyTechClient {
       this._serviceInfo.version = envPort ? envPort : "Unknown";
     }
     this._client = http2.connect([this._serviceInfo.endpoint, this._serviceInfo.port].join(':'));
-    this._client.on("error", (e) => {
+    this._client.on("error", () => {
       this._client.close();
       console.log("BAD CONNECTION!");
-      throw e;
     });
   }
   public isClosed(): boolean {
