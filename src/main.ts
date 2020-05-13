@@ -207,6 +207,9 @@ export class TinyTechClient {
   public isClosed(): boolean {
     return this._client.closed;
   }
+  public isDestoryed(): boolean {
+    return this._client.destroyed;
+  }
   public  getServiceInfo(): ITinyTechServiceInfo {
     return this._serviceInfo;
   }

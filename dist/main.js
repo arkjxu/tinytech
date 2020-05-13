@@ -160,6 +160,9 @@ class TinyTechClient {
     isClosed() {
         return this._client.closed;
     }
+    isDestoryed() {
+        return this._client.destroyed;
+    }
     getServiceInfo() {
         return this._serviceInfo;
     }
