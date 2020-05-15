@@ -278,7 +278,7 @@ export function compress(data: string): Promise<string> {
   return new Promise((resolve, reject) => {
     zlib.gzip(data, (err: Error | null, result: Buffer) => {
       if (err) reject(err);
-      resolve(result.toString("base64"));
+      resolve(result ? result.toString("base64") : "");
     })
   });
 }
@@ -288,7 +288,7 @@ export function decompress(data: string): Promise<string> {
     const decodedData = Buffer.from(data, "base64");
     zlib.unzip(decodedData, (err: Error | null, data: Buffer) => {
       if (err) reject(err);
-      resolve(data.toString("utf8"));
+      resolve(data ? data.toString("utf8") : "");
     })
   });
 }

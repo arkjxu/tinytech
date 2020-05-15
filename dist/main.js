@@ -231,7 +231,7 @@ function compress(data) {
         zlib_1.default.gzip(data, (err, result) => {
             if (err)
                 reject(err);
-            resolve(result.toString("base64"));
+            resolve(result ? result.toString("base64") : "");
         });
     });
 }
@@ -242,7 +242,7 @@ function decompress(data) {
         zlib_1.default.unzip(decodedData, (err, data) => {
             if (err)
                 reject(err);
-            resolve(data.toString("utf8"));
+            resolve(data ? data.toString("utf8") : "");
         });
     });
 }
