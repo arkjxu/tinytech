@@ -203,6 +203,10 @@ export class TinyTechClient {
     this._client.on("error", () => {
       this._client.close();
     });
+    this._client.on("close", () => {
+      this._client.close();
+      this._client.destroy();
+    });
   }
   public isClosed(): boolean {
     return this._client.closed;

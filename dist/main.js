@@ -156,6 +156,10 @@ class TinyTechClient {
         this._client.on("error", () => {
             this._client.close();
         });
+        this._client.on("close", () => {
+            this._client.close();
+            this._client.destroy();
+        });
     }
     isClosed() {
         return this._client.closed;

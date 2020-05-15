@@ -1,11 +1,11 @@
 const {TinyTechClient, TinyTechServer, compress, decompress } = require("../dist/main");
-const TestService = require("./services/testService.json");
+const TestServiceInterface = require("./services/testService.json");
 const testPort = 4196;
 let testService = undefined;
 let testClient = undefined;
 
 beforeAll(() => {
-  TestService.port = testPort;
+  TestServiceInterface.port = testPort;
   testService = new TinyTechServer();
   testService.attachProcedure("hi", (ctx) => ctx.response.body = "Hi!");
   testService.attachProcedure("testPost", async (ctx) => {ctx.response.body = ctx.request.body});
@@ -16,8 +16,8 @@ afterAll(() => {
   testService.close();
 });
 
-test("Check Test Services Connection", async () => {
-  let testClient = new TinyTechClient(TestService);
+test("Services Connection", async () => {
+  let testClient = new TinyTechClient(TestServiceInterface);
   if (!testClient.isClosed()) {
     const result = await testClient.procedure("hi");
     testClient.close();
@@ -25,8 +25,8 @@ test("Check Test Services Connection", async () => {
   }
 });
 
-test("Test POST", async () => {
-  let testClient = new TinyTechClient(TestService);
+test("Basic POST Request", async () => {
+  let testClient = new TinyTechClient(TestServiceInterface);
   const result = await testClient.procedure("testPost", "Hello world!", {
     ":method": "POST"
   });
@@ -34,8 +34,8 @@ test("Test POST", async () => {
   expect(result.response.body).toBe("Hello world!");
 });
 
-test("Test POST with gzip write", async () => {
-  let testClient = new TinyTechClient(TestService);
+test("POST with gzip write", async () => {
+  let testClient = new TinyTechClient(TestServiceInterface);
   const compressedData = await compress(JSON.stringify({msg: "Hi!"}));
   const result = await testClient.procedure("testPost", compressedData, {
     "content-encoding": "gzip",
@@ -45,8 +45,8 @@ test("Test POST with gzip write", async () => {
   expect(result.response.body).toBe(compressedData);
 });
 
-test("Test POST with gzip accept", async () => {
-  let testClient = new TinyTechClient(TestService);
+test("POST with gzip accept", async () => {
+  let testClient = new TinyTechClient(TestServiceInterface);
   const compressedData = await compress("Hi");
   const result = await testClient.procedure("testPost", "Hi", {
     "accept": "gzip"
@@ -54,5 +54,3 @@ test("Test POST with gzip accept", async () => {
   testClient.close();
   expect(result.response.body).toBe(compressedData);
 });
-
-
