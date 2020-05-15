@@ -22,9 +22,9 @@ class TinyTechServer {
         if (this._graceful)
             this._graceful();
         if (this._server.listening) {
-            console.log("CLOSING SERVER");
             this._server.close();
         }
+        process.exit(0);
     }
     onRequest(req, _res) {
         const headers = {
