@@ -21,8 +21,10 @@ class TinyTechServer {
     onExitHandler() {
         if (this._graceful)
             this._graceful();
-        if (this._server.listening)
+        if (this._server.listening) {
+            console.log("CLOSING SERVER");
             this._server.close();
+        }
     }
     onRequest(req, _res) {
         const headers = {

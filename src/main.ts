@@ -66,7 +66,10 @@ export class TinyTechServer {
   
   private onExitHandler() {
     if (this._graceful) this._graceful();
-    if (this._server.listening) this._server.close();
+    if (this._server.listening) {
+      console.log("CLOSING SERVER");
+      this._server.close();
+    }
   }
 
   private onRequest(req: http2.Http2ServerRequest, _res: http2.Http2ServerResponse) {
