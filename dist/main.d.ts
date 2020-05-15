@@ -61,6 +61,7 @@ export declare class TinyTechClient {
     private _client;
     private _serviceInfo;
     constructor(jsonInterface: string | ITinyTechServiceInfo);
+    on(event: string, cb: (...args: any[]) => void): void;
     isClosed(): boolean;
     isDestoryed(): boolean;
     getServiceInfo(): ITinyTechServiceInfo;

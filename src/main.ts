@@ -200,13 +200,16 @@ export class TinyTechClient {
       this._serviceInfo.version = envPort ? envPort : "Unknown";
     }
     this._client = http2.connect([this._serviceInfo.endpoint, this._serviceInfo.port].join(':'));
-    this._client.on("error", () => {
+    this._client = this._client.on("error", () => {
       this._client.close();
     });
-    this._client.on("close", () => {
+    this._client = this._client.on("close", () => {
       this._client.close();
       this._client.destroy();
     });
+  }
+  public on(event: string, cb: (...args: any[]) => void) {
+    this._client.on(event, cb);
   }
   public isClosed(): boolean {
     return this._client.closed;
