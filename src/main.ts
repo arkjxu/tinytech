@@ -245,25 +245,30 @@ export class TinyTechClient {
           body: ""
         }
       }
-      const req = this._client.request(Object.assign({}, {
-        ":path": ["/", name].join(""),
-        ":method": headers && headers.method ? headers.method : data ? "POST" : "GET"
-      }, headers));
-      req.on("error", (err)=>reject(err));
-      req.on("response", (headers: ITinyTechHeader) => {
-        ctx.response.headers = headers;
-      });
-      req.on("data", (chunk: Buffer) => {
-        ctx.response.body += chunk.toString("utf8");
-      });
-      req.on("end", ()=>{
-        resolve(ctx)
-      });
-      req.setEncoding("utf8");
-      if (req.writable && data) {
-        req.write(Buffer.alloc(data.length, data));
+      try {
+        const req = this._client.request(Object.assign({}, {
+          ":path": ["/", name].join(""),
+          ":method": headers && headers.method ? headers.method : data ? "POST" : "GET"
+        }, headers));
+        req.on("error", (err)=>reject(err));
+        req.on("response", (headers: ITinyTechHeader) => {
+          ctx.response.headers = headers;
+        });
+        req.on("data", (chunk: Buffer) => {
+          ctx.response.body += chunk.toString("utf8");
+        });
+        req.on("end", ()=>{
+          resolve(ctx)
+        });
+        req.setEncoding("utf8");
+        if (req.writable && data) {
+          req.write(Buffer.alloc(data.length, data));
+        }
+        req.end();
+      } catch (e) {
+        console.error((e as Error).message);
+        console.log("Error in TinyTech Client Procedure");
       }
-      req.end();
     });
   }
   public availableProcedures(): readonly string[] {
