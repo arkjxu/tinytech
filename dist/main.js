@@ -162,6 +162,10 @@ class TinyTechClient {
             this._client.close();
             this._client.destroy();
         });
+        this._client.setTimeout((5 * 60000), () => {
+            this._client.close();
+            this._client.destroy();
+        });
     }
     on(event, cb) {
         this._client.on(event, cb);

@@ -210,6 +210,9 @@ export class TinyTechClient {
       this._client.close();
       this._client.destroy();
     });
+    this._client.setTimeout((5 * 60000), () => {
+      this._client.close(); this._client.destroy();
+    });
   }
   public on(event: string, cb: (...args: any[]) => void) {
     this._client.on(event, cb);
