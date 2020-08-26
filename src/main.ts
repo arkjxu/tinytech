@@ -101,6 +101,7 @@ export class TinyTechServer {
       }
     }
     req.on("data", async (chunk)=>{
+      console.log("ADDING DATA: " + chunk.toString("utf8"));
       if (ctx.request) {
         ctx.request.body += chunk.toString("utf8");
       }
@@ -128,7 +129,7 @@ export class TinyTechServer {
       if (ctx.request.headers["accept"] === "gzip") {
         req.stream.end(await compress(ctx.response.body));
       } else {
-        req.stream.end(Buffer.alloc(ctx.response.body.length, ctx.response.body));
+        req.stream.end(Buffer.from(ctx.response.body));
       }
     });
   }
@@ -262,7 +263,7 @@ export class TinyTechClient {
         });
         req.setEncoding("utf8");
         if (req.writable && data) {
-          req.write(Buffer.alloc(data.length, data));
+          req.write(Buffer.from(data));
         }
         req.end();
       } catch (e) {

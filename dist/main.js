@@ -3,6 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.decompress = exports.compress = exports.TinyTechClient = exports.TinyTechServer = void 0;
 const http2_1 = __importDefault(require("http2"));
 const zlib_1 = __importDefault(require("zlib"));
 class TinyTechServer {
@@ -55,6 +56,7 @@ class TinyTechServer {
             }
         };
         req.on("data", async (chunk) => {
+            console.log("ADDING DATA: " + chunk.toString("utf8"));
             if (ctx.request) {
                 ctx.request.body += chunk.toString("utf8");
             }
@@ -85,7 +87,7 @@ class TinyTechServer {
                 req.stream.end(await compress(ctx.response.body));
             }
             else {
-                req.stream.end(Buffer.alloc(ctx.response.body.length, ctx.response.body));
+                req.stream.end(Buffer.from(ctx.response.body));
             }
         });
     }
@@ -215,7 +217,7 @@ class TinyTechClient {
                 });
                 req.setEncoding("utf8");
                 if (req.writable && data) {
-                    req.write(Buffer.alloc(data.length, data));
+                    req.write(Buffer.from(data));
                 }
                 req.end();
             }
