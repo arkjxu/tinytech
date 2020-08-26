@@ -1,6 +1,5 @@
 # Tiny Tech
 Tiny tech is the abbreviation for tiny technology.
-This library only has 200 lines of code including types for 
 typescript.  It's basically a wrapper for the NodeJS HTTP/2 module.
 
 ## Current Status
