@@ -101,7 +101,6 @@ export class TinyTechServer {
       }
     }
     req.on("data", async (chunk)=>{
-      console.log("ADDING DATA: " + chunk.toString("utf8"));
       if (ctx.request) {
         ctx.request.body += chunk.toString("utf8");
       }
