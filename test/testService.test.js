@@ -31,7 +31,11 @@ beforeAll(() => {
   testService.attachProcedure("testStatus", (ctx) => {
     ctx.response.headers.status = 404;
     ctx.response.body = "hi";
-  })
+  });
+  testService.attachProcedure("testStatus2", (ctx) => {
+    ctx.response.headers.status = 500;
+    ctx.response.body = "hi";
+  });
   testService.listen(testPort);
 });
 
@@ -76,4 +80,15 @@ test("return status", async () => {
   const result = await testClient.procedure("testStatus");
   testClient.close();
   expect(result.response.headers.status).toBe(404);
+});
+
+test("return status 2", async () => {
+  let testClient = new TinyTechClient(TestServiceInterface);
+  const result = await testClient.procedure("testStatus2", JSON.stringify({
+    test: "just testing"
+  }), {
+    "content-type": "application/json"
+  });
+  testClient.close();
+  expect(result.response.headers.status).toBe(500);
 });

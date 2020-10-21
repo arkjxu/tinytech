@@ -1,6 +1,6 @@
 {
   "name": "tinytech",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "for microservices",
   "main": "dist/main.js",
   "scripts": {
