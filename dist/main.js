@@ -80,7 +80,8 @@ class TinyTechServer {
                 "content-length": ctx.response.headers["content-length"],
                 referer: ctx.response.headers.referer,
                 "content-encoding": ctx.response.headers["content-encoding"],
-                "accept": ctx.response.headers["accept"]
+                "accept": ctx.response.headers["accept"],
+                "status": ctx.response.headers["status"]
             });
             if (ctx.request.headers["accept"] === "gzip") {
                 req.stream.end(await compress(ctx.response.body));
