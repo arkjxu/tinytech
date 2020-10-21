@@ -75,5 +75,5 @@ test("return status", async () => {
   let testClient = new TinyTechClient(TestServiceInterface);
   const result = await testClient.procedure("testStatus");
   testClient.close();
-  expect(result.response.headers.status).toBe("404");
+  expect(result.response.headers.status).toBe(404);
 });

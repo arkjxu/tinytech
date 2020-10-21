@@ -26,6 +26,7 @@ export interface ITinyTechHeader {
   date?: string | undefined;
   "referer"?: string | undefined;
   "accept"?: string | undefined;
+  ":status"?: string | undefined;
 }
 
 export interface ITinyTechResponse {
@@ -124,7 +125,7 @@ export class TinyTechServer {
         referer: ctx.response.headers.referer,
         "content-encoding": ctx.response.headers["content-encoding"],
         "accept": ctx.response.headers["accept"],
-        "status": ctx.response.headers["status"]
+        ":status": ctx.response.headers["status"]
       });
       if (ctx.request.headers["accept"] === "gzip") {
         req.stream.end(await compress(ctx.response.body));
@@ -253,7 +254,10 @@ export class TinyTechClient {
         }, headers));
         req.on("error", (err)=>reject(err));
         req.on("response", (headers: ITinyTechHeader) => {
-          ctx.response.headers = headers;
+          ctx.response.headers = {
+            ...headers,
+            status: parseInt(headers[":status"] ? headers[":status"] as string : "404")
+          };
         });
         req.on("data", (chunk: Buffer) => {
           ctx.response.body += chunk.toString("utf8");

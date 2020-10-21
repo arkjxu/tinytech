@@ -23,6 +23,7 @@ export interface ITinyTechHeader {
     date?: string | undefined;
     "referer"?: string | undefined;
     "accept"?: string | undefined;
+    ":status"?: string | undefined;
 }
 export interface ITinyTechResponse {
     body: any;
