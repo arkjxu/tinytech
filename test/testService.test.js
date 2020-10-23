@@ -1,4 +1,5 @@
 const {TinyTechClient, TinyTechServer, compress, decompress } = require("../dist/main");
+const queryString = require("querystring");
 const testPort = 4196;
 let testService = undefined;
 
@@ -25,6 +26,11 @@ beforeAll(() => {
   testService.use(jsonParser);
   testService.attachProcedure("ping", (ctx) => ctx.response.body = "pong");
   testService.attachProcedure("jsonTester", (ctx) => ctx.response.body = ctx.request.body.user);
+  testService.attachProcedure("query", (ctx) => {
+    const queries = ctx.request.headers.path.substr(ctx.request.headers.path.indexOf("?") + 1);
+    const qs = queryString.parse(queries);
+    ctx.response.body = qs["name"];
+  })
   testService.attachProcedure("testPost", (ctx) => {
     ctx.response.body = ctx.request.body.test_msg;
   });
@@ -44,7 +50,7 @@ afterAll(() => {
 });
 
 test("Services Connection", async () => {
-  let testClient = new TinyTechClient(TestServiceInterface);
+  const testClient = new TinyTechClient(TestServiceInterface);
   if (!testClient.isClosed()) {
     const result = await testClient.procedure("ping");
     testClient.close();
@@ -53,7 +59,7 @@ test("Services Connection", async () => {
 });
 
 test("Test POST JSON middleware", async () => {
-  let testClient = new TinyTechClient(TestServiceInterface);
+  const testClient = new TinyTechClient(TestServiceInterface);
   const result = await testClient.procedure("jsonTester", JSON.stringify({
     user: "kevin.xu@nike.com"
   }), {
@@ -64,7 +70,7 @@ test("Test POST JSON middleware", async () => {
 });
 
 test("Test JSON", async () => {
-  let testClient = new TinyTechClient(TestServiceInterface);
+  const testClient = new TinyTechClient(TestServiceInterface);
   const worked = "worked!";
   const result = await testClient.procedure("testPost", JSON.stringify({
     test_msg: worked
@@ -76,14 +82,14 @@ test("Test JSON", async () => {
 });
 
 test("return status", async () => {
-  let testClient = new TinyTechClient(TestServiceInterface);
+  const testClient = new TinyTechClient(TestServiceInterface);
   const result = await testClient.procedure("testStatus");
   testClient.close();
   expect(result.response.headers.status).toBe(404);
 });
 
 test("return status 2", async () => {
-  let testClient = new TinyTechClient(TestServiceInterface);
+  const testClient = new TinyTechClient(TestServiceInterface);
   const result = await testClient.procedure("testStatus2", JSON.stringify({
     test: "just testing"
   }), {
@@ -91,4 +97,13 @@ test("return status 2", async () => {
   });
   testClient.close();
   expect(result.response.headers.status).toBe(500);
+});
+
+test("get with query", async () => {
+  const testClient = new TinyTechClient(TestServiceInterface);
+  const result = await testClient.procedure("query", undefined, {
+    query: "name=Hi"
+  });
+  testClient.close();
+  expect(result.response.body).toBe("Hi");
 });

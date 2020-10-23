@@ -61,11 +61,13 @@ class TinyTechServer {
             }
         });
         req.on("end", async () => {
-            if (this._procedures.has(ctx.request.headers.path)) {
+            const ifQuery = ctx.request.headers.path.indexOf('?');
+            const path = ctx.request.headers.path.substr(0, ifQuery >= 0 ? ifQuery : undefined);
+            if (this._procedures.has(path)) {
                 for (let i = this._middlewares.length - 1, j = 0; i >= 0; --i, ++j) {
                     this._middlewares[j](ctx);
                 }
-                const proc = this._procedures.get(ctx.request.headers.path);
+                const proc = this._procedures.get(path);
                 if (proc)
                     await proc(ctx);
             }
@@ -73,16 +75,7 @@ class TinyTechServer {
                 ctx.response.body = "Procedure not found!";
             }
             req.setEncoding("utf8");
-            req.stream.respond({
-                ":method": ctx.response.headers.method,
-                date: ctx.response.headers.date,
-                authorization: ctx.response.headers.authorization,
-                "content-length": ctx.response.headers["content-length"],
-                referer: ctx.response.headers.referer,
-                "content-encoding": ctx.response.headers["content-encoding"],
-                "accept": ctx.response.headers["accept"],
-                ":status": ctx.response.headers["status"]
-            });
+            req.stream.respond(Object.assign(Object.assign({}, ctx.response.headers), { ":method": ctx.response.headers.method, date: ctx.response.headers.date, authorization: ctx.response.headers.authorization, "content-length": ctx.response.headers["content-length"], referer: ctx.response.headers.referer, "content-encoding": ctx.response.headers["content-encoding"], "accept": ctx.response.headers["accept"], ":status": ctx.response.headers["status"] }));
             if (ctx.request.headers["accept"] === "gzip") {
                 req.stream.end(await compress(ctx.response.body));
             }
@@ -185,10 +178,7 @@ class TinyTechClient {
         return new Promise((resolve, reject) => {
             const ctx = {
                 request: {
-                    headers: {
-                        "content-type": "plain/text",
-                        "path": "/"
-                    },
+                    headers: Object.assign(Object.assign({}, headers), { "content-type": "plain/text", "path": "/" }),
                     body: "",
                     stream: undefined
                 },
@@ -202,7 +192,7 @@ class TinyTechClient {
             };
             try {
                 const req = this._client.request(Object.assign({}, {
-                    ":path": ["/", name].join(""),
+                    ":path": ["/", name, headers && headers.query ? `?${headers.query}` : ''].join(""),
                     ":method": headers && headers.method ? headers.method : data ? "POST" : "GET"
                 }, headers));
                 req.on("error", (err) => reject(err));

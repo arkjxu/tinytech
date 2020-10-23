@@ -24,6 +24,7 @@ export interface ITinyTechHeader {
     "referer"?: string | undefined;
     "accept"?: string | undefined;
     ":status"?: string | undefined;
+    "query"?: string | undefined;
 }
 export interface ITinyTechResponse {
     body: any;

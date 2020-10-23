@@ -27,6 +27,7 @@ export interface ITinyTechHeader {
   "referer"?: string | undefined;
   "accept"?: string | undefined;
   ":status"?: string | undefined;
+  "query"?: string | undefined;
 }
 
 export interface ITinyTechResponse {
@@ -107,17 +108,20 @@ export class TinyTechServer {
       }
     })
     req.on("end", async () => {
-      if (this._procedures.has(ctx.request.headers.path)) {
+      const ifQuery = ctx.request.headers.path.indexOf('?');
+      const path = ctx.request.headers.path.substr(0, ifQuery >= 0 ? ifQuery : undefined);
+      if (this._procedures.has(path)) {
         for (let i = this._middlewares.length - 1, j = 0; i >= 0; --i, ++j) {
           this._middlewares[j](ctx);
         }
-        const proc: ITinyTechProcedure  | undefined = this._procedures.get(ctx.request.headers.path);
+        const proc: ITinyTechProcedure  | undefined = this._procedures.get(path);
         if (proc) await proc(ctx);
       } else {
         ctx.response.body = "Procedure not found!";
       }
       req.setEncoding("utf8");
       req.stream.respond({
+        ...ctx.response.headers,
         ":method": ctx.response.headers.method,
         date: ctx.response.headers.date,
         authorization: ctx.response.headers.authorization,
@@ -126,7 +130,7 @@ export class TinyTechServer {
         "content-encoding": ctx.response.headers["content-encoding"],
         "accept": ctx.response.headers["accept"],
         ":status": ctx.response.headers["status"]
-      });
+      } as any);
       if (ctx.request.headers["accept"] === "gzip") {
         req.stream.end(await compress(ctx.response.body));
       } else {
@@ -233,6 +237,7 @@ export class TinyTechClient {
       const ctx: ITinyTechContext = {
         request: {
           headers: {
+            ...headers,
             "content-type": "plain/text",
             "path": "/"
           },
@@ -249,7 +254,7 @@ export class TinyTechClient {
       }
       try {
         const req = this._client.request(Object.assign({}, {
-          ":path": ["/", name].join(""),
+          ":path": ["/", name, headers && headers.query ? `?${headers.query}` : ''].join(""),
           ":method": headers && headers.method ? headers.method : data ? "POST" : "GET"
         }, headers));
         req.on("error", (err)=>reject(err));
