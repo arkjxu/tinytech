@@ -192,7 +192,7 @@ class TinyTechClient {
             };
             try {
                 const req = this._client.request(Object.assign({}, {
-                    ":path": ["/", name, headers && headers.query ? `?${headers.query}` : ''].join(""),
+                    ":path": ["/", name.charAt(0) !== '/' ? name : name.substr(1)].join(""),
                     ":method": headers && headers.method ? headers.method : data ? "POST" : "GET"
                 }, headers));
                 req.on("error", (err) => reject(err));

@@ -101,9 +101,8 @@ test("return status 2", async () => {
 
 test("get with query", async () => {
   const testClient = new TinyTechClient(TestServiceInterface);
-  const result = await testClient.procedure("query", undefined, {
-    query: "name=Hi"
-  });
+  const result = await testClient.procedure("query?name=Hi", undefined);
   testClient.close();
+  console.log(result.response.body);
   expect(result.response.body).toBe("Hi");
 });
