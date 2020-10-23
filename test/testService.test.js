@@ -100,8 +100,18 @@ test("return status 2", async () => {
 });
 
 test("get with query", async () => {
+  const path = "coachservice/QueRy?name=Hi";
+  function removeServiceRootPath(path) {
+    let p = path;
+    if (p.charAt(0) !== '/') p = '/' + p;
+    const url = p.split('/');
+    if (url.length > 1) {
+      url.splice(0, 2);
+    }
+    return url.join('/');
+  }
   const testClient = new TinyTechClient(TestServiceInterface);
-  const result = await testClient.procedure("query?name=Hi", undefined);
+  const result = await testClient.procedure(removeServiceRootPath(path));
   testClient.close();
   expect(result.response.body).toBe("Hi");
 });
