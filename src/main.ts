@@ -276,8 +276,7 @@ export class TinyTechClient {
         }
         req.end();
       } catch (e) {
-        console.error((e as Error).message);
-        console.log("Error in TinyTech Client Procedure");
+        reject(e);
       }
     });
   }
